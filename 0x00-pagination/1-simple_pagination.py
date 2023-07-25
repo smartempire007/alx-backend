@@ -7,7 +7,8 @@ project)
 Use assert to verify that both arguments are integers greater than 0.
 Use index_range to find the correct indexes to paginate the dataset correctly
 and return the appropriate page of the dataset (i.e. the correct list of rows).
-if the input arguments are out of range for the dataset, an empty list should"""
+if the input arguments are out of range for the dataset, an empty list should
+"""
 
 import csv
 import math
