@@ -26,103 +26,61 @@ from base_caching import BaseCaching
 
 
 class LFUCache(BaseCaching):
-    '''a class LFUCache that inherits from BaseCaching'''
+    """"a caching system using LFU replacement policies"""
 
     def __init__(self):
-        '''init'''
+        """Initializes LFUCache instance"""
         super().__init__()
-        self.__queueing = []
+        self.__tracking = []
 
     def index(self, key):
-        '''Return the index of key in cache or none'''
+        """Return the index of a key in cache or None"""
         i = 0
-        for k in self.__queueing:
-            if k == key:
+        for saved_key, count in self.__tracking:
+            if saved_key == key:
                 return i
             i += 1
         return None
 
     def hit(self, key):
-        '''Update hit count of key'''
+        """Update hit count of the matching key"""
         index = self.index(key)
         if index is None:
             return
-        _key, _count = self.__queueing[index]
-        self.__queueing[index] = (_key, _count + 1)
+        _key, count = self.__tracking[index]
+        self.__tracking[index] = (_key, count + 1)
 
     def pop(self):
-        '''Remove queueing for a matching key and return it'''
+        """Removes tracking for a matching key, return key"""
         from functools import reduce
-        match = reduce(lambda x, y: x if x[1] < y[1] else y,
-                       self.__queueing)
-        _key, _count = self.__queueing.pop(self.index(match))
+        match = reduce(lambda x, y: x if x[1] <= y[1] else y,
+                       self.__tracking)
+        _key, count = self.__tracking.pop(self.__tracking.index(match))
         return _key
 
     def put(self, key, item):
-        '''Insert a new key, value pair into cache'''
+        """Inserts a new key, value pair into cache"""
         if not all([key, item]):
             return
         self.cache_data.update({key: item})
 
-        if len(self.cache_data) <= self.MAX_ITEMS:
+        if len(self.cache_data) <= self.MAX_ITEMS:  # cache not filled
             if self.index(key) is None:
-                self.__queueing.append((key, 0))
+                self.__tracking.append((key, 0))
             else:
                 self.hit(key)
             return
 
+        # cache filled up
         if self.index(key) is None:
             popped_key = self.pop()
             self.cache_data.pop(popped_key)
             print('DISCARD: {}'.format(popped_key))
-            self.__queueing.append((key, 0))
+            self.__tracking.append((key, 0))
         return
 
     def get(self, key):
-        '''Return the value in self.cache_data linked to key'''
-
+        """Returns a value for a matching key in cache,
+        or None if not exists"""
         self.hit(key)
         return self.cache_data.get(key, None)
-
-    #     self.__frequency = {}
-
-    # def put(self, key, item):
-    #     """Inserts a new key, value pair into cache"""
-    #     if not all([key, item]):
-    #         return
-    #     self.cache_data.update({key: item})
-
-    #     if len(self.cache_data) <= self.MAX_ITEMS:  # cache not filled
-    #         if key not in self.__queueing:
-    #             self.__queueing.append(key)
-    #             self.__frequency.update({key: 0})
-    #         else:
-    #             self.__queueing.append(self.__queueing.pop(
-    #                 self.__queueing.index(key)
-    #             ))
-    #             self.__frequency[key] += 1
-    #         return
-
-    #     # cache filled up
-    #     if key not in self.__queueing:
-    #         '''cache filled up'''
-    #         popped_key = self.__queueing.pop(0)
-    #         self.cache_data.pop(popped_key)
-    #         print('DISCARD: {}'.format(popped_key))
-    #         self.__queueing.append(key)
-    #         self.__frequency.update({key: 0})
-    #     else:
-    #         self.__queueing.append(self.__queueing.pop(
-    #             self.__queueing.index(key)
-    #         ))
-    #         self.__frequency[key] += 1
-    #     return
-
-    # def get(self, key):
-    #     '''return the value in self.cache_data linked to key'''
-    #     if key in self.__queueing:
-    #         self.__queueing.append(self.__queueing.pop(
-    #             self.__queueing.index(key)
-    #         ))
-    #         self.__frequency[key] += 1
-    #     return self.cache_data.get(key, None)
