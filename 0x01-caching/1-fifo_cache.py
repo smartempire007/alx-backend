@@ -28,20 +28,26 @@ class FIFOCache(BaseCaching):
     def __init__(self):
         '''init'''
         super().__init__()
-        self.queue = []
+        self.__queueing = []
 
     def put(self, key, item):
-        '''assign to the dictionary self.cache_data the item'''
-        if key is None or item is None:
-            return self.cache_data.update({key: item})
+        """Inserts a new key, value pair into cache"""
+        if not all([key, item]):
+            return
+        self.cache_data.update({key: item})
 
-        # if key is not in cache_data
-        if len(self.cache_data) >= BaseCaching.MAX_ITEMS:
-            discard = self.queue[0]
-            self.cache_data.pop(discard)
-            print('DISCARD: {}'.format(discard))
-            self.queue.pop(0)
-        return self.cache_data.update({key: item})
+        if len(self.cache_data) <= self.MAX_ITEMS:  # cache not filled
+            if key not in self.__queueing:
+                self.__queueing.append(key)
+            return
+
+        # cache filled up
+        if key not in self.__queueing:
+            popped_key = self.__queueing.pop(0)
+            self.cache_data.pop(popped_key)
+            print('DISCARD: {}'.format(popped_key))
+            self.__queueing.append(key)
+        return
 
     def get(self, key):
         '''return the value in self.cache_data linked to key'''
