@@ -48,7 +48,7 @@ class LIFOCache(BaseCaching):
                 ))
             return
 
-        if not key in self.__queueing:
+        if key not in self.__queueing:
             '''cache filled up'''
             popped_key = self.__queueing.pop()
             self.cache_data.pop(popped_key)
