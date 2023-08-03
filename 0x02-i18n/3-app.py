@@ -3,11 +3,16 @@
 Use the message IDs home_title and home_header.'''
 
 from flask import Flask, render_template, request
-from flask_babel import Babel, gettext, _
+from flask_babel import Babel
 
 
 class Config(object):
-    '''Config class'''
+    """Configuration class for the Flask app.
+    Attributes:
+        LANGUAGES (list): A list of supported languages.
+        BABEL_DEFAULT_LOCALE (str): The default locale to use.
+        BABEL_DEFAULT_TIMEZONE (str): The default timezone to use.
+    """
     LANGUAGES = ["en", "fr"]
     BABEL_DEFAULT_LOCALE = "en"
     BABEL_DEFAULT_TIMEZONE = "UTC"
@@ -28,7 +33,7 @@ def get_locale():
 @app.route('/')
 def index():
     '''index method'''
-    return render_template('3-index.html', title=gettext('Home Page'), header=gettext('Welcome to Holberton'))
+    return render_template('3-index.html')
 
 
 if __name__ == '__main__':
