@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-'''Create a get_locale function with the babel.localeselector decorator.
+'''Create a get_locale function with the babel.locale selector decorator.
 Use request.accept_languages to determine the best match with our
 supported languages.'''
 
@@ -23,6 +23,13 @@ babel = Babel(app)
 def get_locale():
     '''get_locale method'''
     return request.accept_languages.best_match(app.config['LANGUAGES'])
+
+
+@app.route('/')
+def index():
+    """_summary_
+    """
+    return render_template('2-index.html')
 
 
 if __name__ == '__main__':
