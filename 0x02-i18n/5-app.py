@@ -36,7 +36,8 @@ users = {
 
 
 def get_user():
-    """Get the user dictionary based on the login ID provided in the request args.
+    """Get the user dictionary based on the login ID provided in the
+    request args.
 
     Returns:
         dict or None: User dictionary or None if the ID cannot be found.
@@ -51,7 +52,8 @@ def get_user():
 def before_request():
     """Callback function executed before each request.
 
-    It sets the `g.user` object to the user dictionary retrieved using `get_user()`.
+    It sets the `g.user` object to the user dictionary
+    retrieved using `get_user()`.
     """
     user = get_user()
     g.user = user
@@ -62,7 +64,8 @@ def get_locale():
     """Determine the locale for the current request.
 
     It first checks if the locale is specified in the request args. If not,
-    it falls back to the best match locale from the accept languages of the request.
+    it falls back to the best match locale from the accept
+    languages of the request.
 
     Returns:
         str: The selected locale.
