@@ -8,7 +8,13 @@ from flask_babel import Babel, gettext
 
 
 class Config(object):
-    '''Config class'''
+    """Configuration class for the Flask app.
+
+    Attributes:
+        LANGUAGES (list): A list of supported languages.
+        BABEL_DEFAULT_LOCALE (str): The default locale to use.
+        BABEL_DEFAULT_TIMEZONE (str): The default timezone to use.
+    """
     LANGUAGES = ["en", "fr"]
     BABEL_DEFAULT_LOCALE = "en"
     BABEL_DEFAULT_TIMEZONE = "UTC"
@@ -21,13 +27,20 @@ babel = Babel(app)
 
 @babel.localeselector
 def get_locale():
-    '''get_locale method'''
+    """Returns the selected locale based on the request.
+
+    Returns:
+        str: The selected locale.
+    """
     return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 
 @app.route('/')
 def index():
-    """_summary_
+    """Renders the index template.
+
+    Returns:
+        str: The rendered HTML content.
     """
     return render_template('2-index.html')
 
