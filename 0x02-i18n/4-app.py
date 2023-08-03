@@ -6,7 +6,7 @@ argument and ifs value is a supported locale, return it. If not or if the
 parameter is not present, resort to the previous default behavior.
 Now you should be able to test different translations by visiting
 http://127.0.0.1:5000?locale=[fr|en].
-Visiting http://127.0.0.1:5000/?locale=fr should display this level 1 heading: 
+Visiting http://127.0.0.1:5000/?locale=fr should display this level 1 heading:
 Bienvenue sur Holberton'''
 
 from flask import Flask, render_template, request
@@ -14,7 +14,13 @@ from flask_babel import Babel
 
 
 class Config(object):
-    '''Config class for Flask app'''
+    """Configuration class for the Flask app.
+
+    Attributes:
+        LANGUAGES (list): A list of supported languages.
+        BABEL_DEFAULT_LOCALE (str): The default locale to use.
+        BABEL_DEFAULT_TIMEZONE (str): The default timezone to use.
+    """
     LANGUAGES = ["en", "fr"]
     BABEL_DEFAULT_LOCALE = "en"
     BABEL_DEFAULT_TIMEZONE = "UTC"
@@ -28,7 +34,11 @@ babel = Babel(app)
 
 @babel.localeselector
 def get_locale():
-    '''get_locale method for babel decorator'''
+    """Returns the selected locale based on the request.
+
+    Returns:
+        str: The selected locale.
+    """
     locale = request.args.get('locale')
     if locale and locale in Config.LANGUAGES:
         print(locale)
@@ -38,7 +48,11 @@ def get_locale():
 
 @app.route('/')
 def index():
-    '''index method'''
+    """Renders the index template.
+
+    Returns:
+        str: The rendered HTML content.
+    """
     return render_template('4-index.html')
 
 
